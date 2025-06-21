@@ -9,7 +9,7 @@ using System;
 namespace API.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/users")]
 public class UserController : ControllerBase
 {
     
