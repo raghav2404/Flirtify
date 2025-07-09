@@ -1,24 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using API.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using API.Services;
+using API.Interfaces;
+using API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("CorsPolicy", policy =>
-    {
-        policy.AllowAnyHeader()
-              .AllowAnyMethod()
-              .WithOrigins("http://localhost:4200") // Adjust the origin as needed
-              .AllowCredentials();
-    });
-});
+builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddIdentityServices(builder.Configuration);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -38,6 +34,7 @@ app.UseCors("CorsPolicy");
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 
 app.UseAuthorization();
 
